@@ -25,7 +25,7 @@ public class UltrasonicLocalizer extends Thread implements UltrasonicController 
 	}
 	
 	public void run() {
-		
+		while (true) {
 		us.fetchSample(usData, 0);
 		distance = (int) (usData[0] * 100.0); // get data
 		LCD.drawString(Integer.toString(distance), 0, 5);
@@ -34,15 +34,28 @@ public class UltrasonicLocalizer extends Thread implements UltrasonicController 
 			risingEdge(distance);
 		} else {
 			fallingEdge(distance);
-
+		}
 		}
 		
 	}
 	
 	public void fallingEdge(int distance) {
+		leftMotor.setSpeed(Lab4.ROTATE_SPEED);
+		rightMotor.setSpeed(Lab4.ROTATE_SPEED);
+		
+		leftMotor.rotate(-convertAngle(Lab4.WHEEL_RAD, Lab4.TRACK, 360), true); // Turn left
+		rightMotor.rotate(convertAngle(Lab4.WHEEL_RAD, Lab4.TRACK, 360), true);
 		
 	}
 	
+	private static int convertDistance(double radius, double distance) {
+	    return (int) ((180.0 * distance) / (Math.PI * radius));
+	  }
+
+	  private static int convertAngle(double radius, double width, double angle) {
+	    return convertDistance(radius, Math.PI * width * angle / 360.0);
+	  }
+	  
 	public void risingEdge(int distance) {
 		
 	}
